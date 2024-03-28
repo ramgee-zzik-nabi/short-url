@@ -10,15 +10,33 @@ const schema = z.object({
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const bearerToken = req.headers.authorization?.replace("Bearer ", "");
+  const cookieToken = req.cookies["access_token"];
+
+  if (!bearerToken && !cookieToken) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const {
+    data: { user },
+    error: loginError,
+  } = await supabase.auth.getUser(bearerToken ?? cookieToken);
+
+  if (loginError) {
+    console.error(loginError);
+    return res.status(401).json({ message: "Failed to login" });
+  }
+
   const validation = schema.safeParse(req.body);
   if (validation.success === false) {
     return res.status(400).json({ message: validation.error });
   }
 
+  assert(user, "User should not be null");
   const { custom_url, destination } = validation.data;
   const { data, error } = await supabase
     .from("redirection_url")
-    .insert({ source: custom_url ?? nanoid(6), destination })
+    .insert({ source: custom_url ?? nanoid(6), destination, owner: user.id })
     .select()
     .single();
 
