@@ -16,12 +16,12 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@channel.io/eslint-config": "^2.0.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
-    "eslint-config-next": "14.0.4",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "postcss": "^8",
