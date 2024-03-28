@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (error) {
     console.error(error);
-    return res.status(500).json({ message: "Failed to sign in", error });
+    return res.status(403).json({ message: "Failed to sign in", error });
   }
 
   assert(data, "No data in response");
